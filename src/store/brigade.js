@@ -26,7 +26,8 @@ const actions = {
     var brigades = await api('crm/brigade', 'all' ,data);
     console.log("brigades",brigades)
     commit('setBrigadeList',brigades)
-  }
+  },
+  
 };
 
 const mutations = {
