@@ -5,7 +5,7 @@
 
 <template>
     Partner
-    <TableComponent v-bind:table="tbComponent" :paggiante="getPagginate" :updateListData="loadPartnerList" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" :dataTable="dataTable" />
+    <TableComponent v-bind:table="tbComponent" :updateListData="loadPartnerList" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" :dataTable="dataTable" />
 </template>
 <script>
 import router from '../router';

@@ -1,4 +1,4 @@
-import { instance } from '@/modules/webclient.js'
+import { instance, api } from '@/modules/webclient.js'
 
 const state = {
     object: {},
@@ -17,11 +17,10 @@ const actions = {
   async listObjects({commit}) {
     console.log("objects-store: getListObjects")
     let dataSend = ""
-    await instance.post('/api/v1/crm/objects', dataSend).then((response) => {
-      let data = response.data
-      commit('setListObjects',data)
-      console.log("setListObjects",data)
-    })
+    let data =  await api('crm/objects/', 'post',dataSend)
+    console.log("setListObjects",data.data)  
+    commit('setListObjects',data.data)
+      
   },
   async getSpecifications({commit},id) {
     await commit("specificationGetListActions",id)

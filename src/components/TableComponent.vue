@@ -27,7 +27,7 @@
                                 </button>
                                 <Transition>
                                 <div class="collapse" :id="'fl'+key">
-                                    <VueDatePicker v-model="filterData[key]" range locale="ru" auto-apply month-picker @update:model-value="filterSet" />
+                                    <VueDatePicker v-if="'dateMon' == col.type" v-model="filterData[key]" range locale="ru" auto-apply month-picker @update:model-value="filterSet(key,col,this)" />
                                        {{col.type}}
                                 </div>
                             </Transition>
@@ -60,6 +60,7 @@
                             </span>
 
                             <span v-else-if='!col.type || col.type == "multiselect"'>
+                                
                                {{ getColData(row,col,key) }} 
                             </span>
 
@@ -158,7 +159,7 @@
                     <div v-if="col.input && col.type=='data'">
                         <VueDatePicker v-model="record[nameCol]" :format="format" locale="ru" auto-apply />
                     </div>    
-
+                   
                     <div v-if="col.input && col.type=='multiselect' && col.dataList">
                        
                         <VueMultiselect  
@@ -302,10 +303,12 @@ export default {
             if (col.type == 'multiselect') {
                 let text = ""
                 row[key].forEach(element => {
+                    
                     text  = text + element[col.labelColName] +" " 
                 });
                 return text
             }
+
             if (col.value) {
                 col.data = row
                 col.value(row[key])
@@ -319,8 +322,47 @@ export default {
             console.log(col)
             
         },
-        async filterSet(col) {
-            console.log("filterSet",col)
+        async filterSet(key,col,data) {
+            console.log('col:',col,'key:',key)
+            let val = toRaw(this.filterData)
+            console.log('filterSet:',typeof val[col],'|',data.value,'|',col)
+            
+            if (typeof val[key] === "undefined" ) {
+                //clear filter 
+                console.log('clear filter',key)
+                //store.dispatch('removeFilterReq',key)
+                //await this.updateListData()
+                return key
+            }
+
+            
+            let dateStartVal = val[key][0]
+            let dateEndVal = val[key][1]
+            
+            var dateStart = new Date()
+            let dateEnd = new Date()
+            dateStart.setDate('01')
+            dateStart.setMonth(dateStartVal.month)
+            dateStart.setFullYear(dateStartVal.year)
+
+            
+            dateEnd.setMonth(dateEndVal.month)
+            dateEnd.setFullYear(dateEndVal.year)
+            var lastDateofTheMonth = 33 - new Date(dateEndVal.year, dateEndVal.month, 33).getDate()
+            console.log("lastDateofTheMonth",lastDateofTheMonth)
+            dateEnd.setDate(lastDateofTheMonth)
+            //dateStart = dateStart.setUTCFullYear(dateStartVal.year)
+            let filter ={}
+
+            filter[key] = {
+                start: dateStart,
+                end: dateEnd
+            }
+
+            store.dispatch('addFilterReq',filter)
+
+            console.log("filterSet",lastDateofTheMonth,dateStart," | ",dateEnd)
+            await this.updateListData()
 
         },
         async sort(col) {

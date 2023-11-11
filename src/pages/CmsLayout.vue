@@ -160,6 +160,7 @@ export default {
     mounted() {
         console.log('mounted')
         this.ws_init
+        this.loadAccountsCompnay()
         this.username = this.getMe
         console.log(this.account.company)
         store.dispatch('joinChatCompnay_ws',this.account.company.id)
@@ -171,6 +172,7 @@ export default {
             login: 'LogIn',
             ws_init: 'ws_init',
             getMe: 'getMe',
+            loadAccountsCompnay: 'loadAccountsCompnay'
             
         }),
         submit : async function(e) {

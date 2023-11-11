@@ -3,7 +3,10 @@
     import TableComponent from '../components/TableComponent.vue';
 </script>
 <template>
-    <TableComponent v-bind:table="tbComponent" :updateListData="initListobject" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" v-bind:dataTable="dataTable" />
+    <div>
+       
+        <TableComponent v-bind:table="tbComponent" :updateListData="initListobject" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" v-bind:dataTable="dataTable" />
+    </div>
 </template>
 <script>
 import { mapGetters, mapState, mapActions  } from 'vuex'
@@ -23,24 +26,39 @@ export default {
                 },
                 cols: {
                     id: {
-                        show: true,
-                        label: "Наименование объекта",
-                        input: false,
+                        show: false,
+                        label: "id",
                         readonly: true,
-                        type: "html",
                     },
+
                     name: {
                         label: "Наименование объекта",
-                        show: false,
+                        show: true,
                         input: true,
+                        sort: true,
                         readonly: false,
-
+                        type: "text",
+                        filter: true,
                     },
                     address: {
                         label: "Адрес объекта",
                         show: true,
+                        sort: true,
                         input: true,
                         readonly: false,
+                        filter: true,
+                    },
+                    responsibles: {
+                        label: "responsibles",
+                        show: true,
+                        filter: false,
+                        sort: false,
+                        type: "multiselect",
+                        trackBy: "id",
+                        labelColName: "username",
+                        dataList: this.getAccountsCompany,
+                        input: true,
+                        
                     },
 
                 }
@@ -49,11 +67,17 @@ export default {
              
         }
     },
+    created() {
+        store.dispatch('clearFilterReq')
+    },
     mounted() {
         console.log("ListObjects.vue: mounted")
+        
         store.dispatch('listObjects')
+
         console.log(this.dataTable1)
         //this.initListobject
+        this.tbComponent.cols.responsibles.dataList = this.getAccountsCompany
 
     },
     computed: {
@@ -61,6 +85,7 @@ export default {
             dataTable: 'getObjectsList',
             spec: 'specificationGetter',
             specificationList: 'specificationListGetter',
+            getAccountsCompany: 'getAccountsCompany'
         }),
 
         
@@ -69,16 +94,19 @@ export default {
         ...mapActions({
             initListobject: 'listObjects',
             getMe: 'getMe',
+            
             specificationGetList: "specificationGetListActions",
             addObject: "addObject",
             updateObject: "updateObject",
-            deleteObject:"deleteObject"
+            deleteObject:"deleteObject",
+            
         }),
         deleteRecord(id) {
             this.deleteObject(id.id)
         },
         editRecord(record) {
             this.updateObject(record)
+            
         },
         addRecord(record) {
            this.addObject(record)

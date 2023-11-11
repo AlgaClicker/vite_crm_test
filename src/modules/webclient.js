@@ -60,15 +60,22 @@ export async function api(endpoint,method,data) {
   if (method == "post") {
     let options = {
       pagginate: store.getters.getPagginate,
-      filter: "",
+      filter: store.getters.getFilterRequest,
       orderBy: Object.assign({},store.getters.getOrderBy),
     }
-    let newData = toRaw(data)
-    newData['options'] = options
+    var newData = {}
+    newData['data']=toRaw(data)
+    console.log('options:',options)
+    
+      newData['options'] = options
+    
+    //newData['options'] = options 
     console.log('newData:',toRaw(newData))
+    
     return await instance.post('api/v1/'+endpoint, newData).then((response) => {
         return response.data
     })
+    
 
   } else if (method == "get") {
     return await instance.get('api/v1/'+endpoint, data).then((response) => {
@@ -78,10 +85,14 @@ export async function api(endpoint,method,data) {
   
   } else if (method == "all") {
     console.log("method:all, data:",data)
-
+    data['options'] = {
+      pagginate: {
+        limit: 100
+      }
+    }
     return await instance.post('api/v1/'+endpoint, data).then((response) => {
       //console.log(response)
-      return response.data.data
+      return toRaw(response.data.data)
     })  
   } else if (method == "create") {
     await instance.post('api/v1/'+endpoint, data).then((response) => {

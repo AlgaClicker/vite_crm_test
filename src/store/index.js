@@ -13,6 +13,7 @@ import partner from './partner.js';
 import payments from './payments.js'
 import pagginate from './pagginate.js'
 import sortis from './sortis.js';
+import filter from './filter.js';
 // Load Vuex
 
 // Create store
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     payments, 
     pagginate,
     sortis,
+    filter,
     error
   },
   plugins: [createPersistedState()]

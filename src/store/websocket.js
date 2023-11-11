@@ -95,7 +95,8 @@ const actions = {
             console.log("joinOnlineAccount_ws: error");
             console.error(error);
         });
-        console.log(joinChannel);
+
+        console.log('joinChatCompnay_ws:',joinChannel);
     },
 
     async userConnect_ws({commit},account) {
