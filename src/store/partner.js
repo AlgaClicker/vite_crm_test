@@ -30,7 +30,11 @@ const actions = {
         commit('setParnterList',data.data)
         
       })
+    },
+    async newPartner({commit},data) {
+      
     }
+
 };
 
 const mutations = {

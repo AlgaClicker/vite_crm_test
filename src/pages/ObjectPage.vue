@@ -5,7 +5,7 @@
 
 <template>
     <h5>{{ nameObject}}</h5>
-    <TableComponent v-bind:table="tbComponent" :updateListData="updateListData" :paggiante="getPagginate" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" v-bind:dataTable="dataTable" />
+    <TableComponent v-bind:table="tbComponent" :updateListData="updateListData" :deleteRecord="deleteRecord" :editRecord="editRecord" :addRecord="addRecord" v-bind:dataTable="dataTable" />
 
 </template>
 
@@ -45,7 +45,7 @@ export default {
                         
                         type: "multiselect",
                         input: true,
-                        dataList: this.getAccounts,
+                        dataList: this.getAccountsCompany,
                         labelColName: "username",
                         value: function (data) {
                             //return data
@@ -87,7 +87,7 @@ export default {
     },
     created() {
         this.objectId = this.$route.params.id
-        store.dispatch("getAccountsList")
+        store.dispatch("loadAccountsCompnay")
         
     },
     computed: {
@@ -95,10 +95,8 @@ export default {
             dataTable: "getListSpecification",
             getMasterList: "getMasterList",
             getObject: "getObject",
-            getPagginate: "getPagginate"
-            
+            getAccountsCompany: 'getAccountsCompany'
         }),
-        getAccounts: () => store.getters.getAccounts,
         nameObject() {
             if (this.getObject) {
                 this.tbComponent.header.title = "Cпецификации по бъекту \""+this.getObject.name+"\""

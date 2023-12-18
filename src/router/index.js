@@ -13,6 +13,13 @@ import BuhLayoutPage from '@/pages/BuhLayoutPage.vue'
 import InvoicePage from '@/pages/buh/InvoicePage.vue'
 import kadryLayoutPage from '@/pages/kadry/kadryLayoutPage.vue'
 import kadryPayBrigade from '@/pages/kadry/kadryPayBrigade.vue'
+import DocumentsPage from '@/pages/DocumentsPage.vue'
+import layoutReport from '@/pages/reports/layoutReport.vue'
+import indexReport from '@/pages/reports/indexReport.vue'
+import activeAccountReport from '@/pages/reports/activeAccountReport.vue'
+import PartnerPage from '@/pages/PartnerPage.vue'
+import AccountsPage from '@/pages/AccountsPage.vue'
+
 
 import store from "@/store";
 
@@ -33,6 +40,7 @@ const routes = [
           requiresAuth: false
         },
     },
+
     {
         path: '/cms',
         name: 'CMS',
@@ -40,6 +48,7 @@ const routes = [
         meta: { 
           requiresAuth: true,
         },
+        redirect: {name: 'cms_index'}, 
         children: [
           {
             path: "",
@@ -47,27 +56,43 @@ const routes = [
             component: CmsindexPage
           },
           {
+            path: "partners",
+            name: "cms_partners",
+            component: PartnerPage
+          },
+          {
+            path: "accounts",
+            name: "cms_accounts",
+            component: AccountsPage
+          },
+          {
             path: "object",
             name: "cms_objects",
             component: ObjectPageIndex,
           },
           {
-            path: "object/:id/",
+            path: "object",
             name: "cms_object",
+            
             component: ObjectPage,
             children: [
               {
-                path: '',
+                path: '/',
                 name: "objectIndex",
                 component:ObjectPageIndex
               },
               {
-                path:"spec",
+                path:":id",
                 name: "objectIndex",
                 component:SpecificationPage
               },
 
             ]
+          },
+          {
+            path: "document",
+            name: "cms_documents",
+            component: DocumentsPage
           },
           {
             path: "tabel",
@@ -105,6 +130,7 @@ const routes = [
             meta: { 
               requiresAuth: true,
             },
+            redirect: {name: 'cms_buh_invoice'}, 
             children: [
               {
                 path: 'invoice',
@@ -117,6 +143,24 @@ const routes = [
             path: "chat",
             name: "cms_chat",
             component: ChatPage
+          },
+          {
+            path: "reports",
+            name: "cms_reports",
+            component: layoutReport,
+            redirect: {name: 'cms_reports_idx'}, 
+            children: [
+              {
+                path: "index",
+                name: "cms_reports_idx",
+                component: indexReport
+              },
+              {
+                path: "active/accounts",
+                name: "cms_reports_active_accounts",
+                component: activeAccountReport
+              }
+            ]
           },
 
         ]

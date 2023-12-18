@@ -22,7 +22,8 @@ export default defineConfig({
   },
   server: {
     port: 8808,
-    hot: true
+    hot: true, host: '0.0.0.0'
+
   },
   resolve: {
     fallback : {

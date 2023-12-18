@@ -32,12 +32,19 @@ export default {
                         show: false,
                         input: false
                     },
+                    number: {
+                        label: "номер",
+                        show: true,
+                        input: true
+                    },
+
                     date: {
                         label: "Дата",
                         type: "data",
-                        sort: false,
+                        sort: true,
                         show: true,
                         input: true,
+                        filter: true,
                         value: function (data)  {
                             let date = new Date(data)
 
@@ -47,7 +54,7 @@ export default {
                     },   
                     description: {
                         label: "Коментарий",
-                        sort: false,
+                        sort: true,
                         show: true,
                         input: true,
                         
@@ -62,6 +69,8 @@ export default {
                         label: "Тип платежа",
                         type: "select",
                         input: true,
+                        sort: true,
+                        filter: true,
                         trackBy: "type",
                         labelColName: "name",
                         dataList: [
@@ -69,7 +78,8 @@ export default {
                             {name:"Оплатили",type:"out"},
                         ],
                         value: function (data)  {
-                                if (data.type=='in') {
+                            
+                                if (data=='in') {
                                     return "поступление"
                                 } else {
                                     return "Оплата"
@@ -83,7 +93,7 @@ export default {
                         dataList: store.getters.getPartnerList,
                         labelColName: "name",
                         value: (data) =>  {
-                            return data.name + ' ' + data.inn
+                            return data ? data.name : ""
                             if (data) {
                                 return data.username
                             } else {

@@ -10,7 +10,8 @@ const state = {
 };
 const getters = {
   getObjectsList: state  => state.objectsList, 
-  getSpecificationsList: state  => state.specificationsList, 
+  getListSpecification: state  => state.specificationsList, 
+  getObject: state => state.object
 };
 
 const actions = {
@@ -22,9 +23,21 @@ const actions = {
     commit('setListObjects',data.data)
       
   },
+  async readObject({commit}){
+
+  },
+  async loadListSpecifications({commit},idObject){
+    console.log('loadListSpecifications',idObject)
+    let data = {
+      objectId: idObject
+    }
+    let listSpec = await api('crm/specification/','post',data);
+    console.log('loadListSpecifications|listSpec:',listSpec)
+    commit("setSpecifications",listSpec)
+  },
   async getSpecifications({commit},id) {
-    await commit("specificationGetListActions",id)
-    await commit("setSpecifications",this.getters.specificationListGetter)
+    //await commit("specificationGetListActions",id)
+    //await commit("setSpecifications",this.getters.specificationListGetter)
     return this.getters.specificationListGetter
   }
 };

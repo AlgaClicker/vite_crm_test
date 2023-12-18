@@ -29,7 +29,7 @@ const actions = {
 
 const mutations = {
   setPagginate(state,paggiante) {
-    console.log('mutations',paggiante),
+    console.log('setPagginate:mutations',paggiante),
     state.pagginate = paggiante
   },
   setPagginatePage(state,page) {

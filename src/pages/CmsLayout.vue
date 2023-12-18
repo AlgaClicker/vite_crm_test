@@ -1,6 +1,25 @@
 <template>
 
+    <div class="row">
+        <button class=" col-2 btn btn-info my-2">Togle</button>
+    </div>
     
+    <transition>
+    <div v-show="listNotifications" class="position-absolute bottom-0 end-0 mx-4 z-2">
+        <div class="card card-sm" style="width: 18rem;">
+            <ul class="list-group list-group-flush  overflow-auto">
+                <li class="list-group-item" v-for="not in listNotifications">
+                    <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ not.title }}</h6>
+                            <small class="text-muted">{{ not.from_account.username }}</small>
+                    </div>
+                    <p class="mb-1">{{ not.message }}</p>
+                    <small class="text-muted">{{ dateFormatter(not.created_at) }}</small>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </transition>
 
     <div class="row h-100" >
         <div class="col-2 leftNavBar">
@@ -105,6 +124,14 @@
                         Документы
                     </router-link> 
                 </li>
+
+                <li class="nav-item" v-if="getRole.service.indexOf('upravlenie') == 0">
+                    <router-link  class="nav-link" active-class="active" exact-active-class="exact-active" to="/cms/reports">
+                        <font-awesome-icon :icon="['fas', 'folder-open']" size="lg"/>
+                        Отчеты
+                    </router-link> 
+                </li>
+
             </ul>
         </div>
         <div class="col-8 overflow-auto py-3">
@@ -144,6 +171,7 @@ export default {
             showmenudirs: false,
             showMenuBuh: false,
             showMenuKadry: false,
+            newNotification: false,
         }
     },
     computed: {
@@ -151,19 +179,29 @@ export default {
         isAuth: 'isAuthenticated',
         account: 'StateAccount',
         accountsOnline_ws: 'accountsOnline_ws',
-        getRole: "getRole"
+        getRole: "getRole",
+        listNotifications: "listNotifications"
         }),
          company: async () => {
             console.log("computed:company"+this.account)
         }
     },
+    created() {
+       
+    },
     mounted() {
         console.log('mounted')
-        this.ws_init
-        this.loadAccountsCompnay()
+        
+        store.dispatch("ws_init")
+        store.dispatch("loadAccountsCompnay")
+        
+        //this.loadAccountsCompnay()
+        //this.ws_join_notification()
         this.username = this.getMe
+        
         console.log(this.account.company)
         store.dispatch('joinChatCompnay_ws',this.account.company.id)
+        store.dispatch("joinNotification",this.account.id)
         //joinChatCompnay_ws
         //store.dispatch('userConnect_ws',this.account)
     },
@@ -171,7 +209,9 @@ export default {
         ...mapActions({
             login: 'LogIn',
             ws_init: 'ws_init',
+            ws_join_notification: 'joinNotification',
             getMe: 'getMe',
+            getAuth: 'getAuth',
             loadAccountsCompnay: 'loadAccountsCompnay'
             
         }),
@@ -198,6 +238,17 @@ export default {
             this.showmenudirs = false
             this.showMenuBuh = false
 
+        },
+        dateFormatter(date) {
+            
+            if (typeof date == "string") {
+                var d = new Date(date)
+            } else {
+                var d = new Date(date*1000)
+            }
+                
+            
+            return  d.getDate()+"-"+d.getMonth()+"-"+d.getFullYear()+' '+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
         }
     }
 }

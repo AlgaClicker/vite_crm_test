@@ -83,12 +83,42 @@ export async function api(endpoint,method,data) {
     })  
   } else if (method == "update") {
   
+  } else if (method == "report") {
+    const token = store.getters.getToken;
+    let options = {
+      pagginate: store.getters.getPagginate,
+      filter: store.getters.getFilterRequest,
+      orderBy: Object.assign({},store.getters.getOrderBy),
+    }
+    data['options'] = options
+ 
+    const response = await fetch(import.meta.env.VITE_APP_API+"api/v1/crm/reporting/"+endpoint,{
+      headers: {Authorization: token ? `Bearer ${token}` : ""},
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    .then(resp => resp.json())
+    .then(json => {
+      return json.data
+      console.log("JSON",JSON.stringify(json))
+      //store.dispatch()
+    })
+    .catch( error => console.error(error));
+    data = async () => await response
+
+    return response
+
   } else if (method == "all") {
     console.log("method:all, data:",data)
-    data['options'] = {
-      pagginate: {
-        limit: 100
-      }
+    if (data == null) {
+      var data = Array();
+      
+      data["options"] = {
+        pagginate: {
+          limit: 100
+        }
+      };
+  
     }
     return await instance.post('api/v1/'+endpoint, data).then((response) => {
       //console.log(response)

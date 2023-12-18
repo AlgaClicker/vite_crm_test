@@ -9,7 +9,8 @@ const state = {
 
 };
 const getters = {
-    getAccountsCompany: state => state.accounts
+    getAccountsCompany: state => state.accounts,
+    getAccounts: state => state.accounts
 };
 
 const actions = {
@@ -21,6 +22,10 @@ const actions = {
             let data = response.data.data
             console.log(data)
         })
+    },
+    async getAccountsList({commit}) {
+        let accountList = await api('crm/account/','all',{});
+        commit('setAccountsList', accountList)
     },
     async loadAccountsCompnay({commit}) {
         let accountList = await api('crm/account/','all',{});

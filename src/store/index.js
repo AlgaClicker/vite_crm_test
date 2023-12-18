@@ -14,6 +14,7 @@ import payments from './payments.js'
 import pagginate from './pagginate.js'
 import sortis from './sortis.js';
 import filter from './filter.js';
+import reports from './reports.js'
 // Load Vuex
 
 // Create store
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     pagginate,
     sortis,
     filter,
+    reports,
     error
   },
   plugins: [createPersistedState()]

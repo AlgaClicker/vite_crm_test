@@ -1,4 +1,4 @@
-import { instance } from '@/modules/webclient.js'
+import { instance,api } from '@/modules/webclient.js'
 import { isProxy, toRaw, ref } from 'vue';
 
 const state = {
@@ -24,12 +24,16 @@ const actions = {
       let data = {
         options: this.getOptionsReques
       }
+      /*
       await instance.post('/api/v1/crm/payments/invoice', data).then((response) => {
           console.log("loadInvocesList");
           console.log(response);
           commit('setInvoiceList',response.data.data);
           commit('setOptions',response.data.options);
       })
+      */
+      let list = await api('crm/payments/invoice','post',{});
+      commit('setInvoiceList',list.data);
     },
     async createInvoice({commit},data) {
       await instance.post('/api/v1/crm/payments/invoice/add', data).then((response) => {

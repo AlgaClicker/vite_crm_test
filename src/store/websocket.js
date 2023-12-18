@@ -6,11 +6,13 @@ const state = {
     channels: [],
     company_id: null,
     account_id: null,
-    accountsOnline: []
+    accountsOnline: [],
+    notifications: []
 };
 
 const getters = {
     accountsOnline_ws: state  =>  state.accountsOnline, 
+    listNotifications: state => state.notifications
 };
 
 const actions = {
@@ -69,6 +71,29 @@ const actions = {
     async leaveChannel({commit},channel) {
         window.Echo.leaveAllChannels()
     },
+    joinNotification({commit},id) {
+        //this.ws_init({commit});
+        console.log("joinNotification: join");
+        
+        window.Echo.join('notifications.'+id)
+            .here((users) => {
+                console.log("joinNotification:here users:",users);
+            })
+            .error((error) => {
+                console.log("joinNotification: error:",error);
+            })
+            .listen('.newNotification', (notification) => {
+                console.log("listen: newNotification:",notification);
+                console.log("newNotification: presence-notifications:",notification);
+                commit('addNotification',notification.notification)
+            })
+            
+            window.Echo.private('newNotification').listen('.presence-notifications.'+id, (e)=>{
+                //console.log("newNotification: presence-notifications:",e);
+                //commit('addNotification',e.notification)
+            })
+    },
+
     joinChatCompnay_ws({commit},id) {
         console.log("joinOnlineAccount_ws: join");
         const joinChannel = window.Echo.join('online.'+id)
@@ -135,7 +160,12 @@ const mutations = {
         }
        
     },
-
+    addNotification(state,not) {
+        if (state.notifications.length > 5) {
+            state.notifications =  state.notifications.slice(1,state.notifications.length)
+        }
+        state.notifications.push(not)
+    },
     joinAccount(state, account){
         //state.accountsOnline = state.accountsOnline.push(account)
         console.log("mutations:joinAccount")

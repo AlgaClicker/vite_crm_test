@@ -58,6 +58,10 @@
                             <span v-else-if='!col.type || col.type == "text" || col.type == "select"'>
                                 {{ getColData(row,col,key) }} 
                             </span>
+                            <span v-else-if='col.type == "link" && col.url'>
+                                <RouterLink :to=" getColData(row,col,key)">{{ row[key] }}</RouterLink>
+                                
+                            </span>
 
                             <span v-else-if='!col.type || col.type == "multiselect"'>
                                 
@@ -221,10 +225,11 @@ import { mapGetters, mapState, mapActions  } from 'vuex'
 import store from '@/store'
 import VueMultiselect  from 'vue-multiselect'
 import VueDatePicker from '@vuepic/vue-datepicker';
+import { RouterLink } from 'vue-router';
 import { Tooltip, Toast, Popover, Collapse } from 'bootstrap';
 import '@vuepic/vue-datepicker/dist/main.css'
 export default {
-    components: { VueMultiselect,VueDatePicker,Collapse  },
+    components: { VueMultiselect,VueDatePicker,Collapse,RouterLink  },
     
     props: ['table','dataTable','addRecord','editRecord','deleteRecord','options','updateListData'],
     data() {
@@ -308,7 +313,10 @@ export default {
                 });
                 return text
             }
-
+            if (col.type == 'link' && col.url) {
+                console.log(row,' -|COL|- ');
+                return col.url.replace('{{id}}', row.id)
+            }
             if (col.value) {
                 col.data = row
                 col.value(row[key])
